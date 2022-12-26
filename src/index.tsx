@@ -60,7 +60,7 @@ declare global {
 
 const BASE_URL =
     Capacitor.getPlatform() == "android"
-        ? "https://joyappdev.free.beeceptor.com"
+        ? "http://10.0.2.2:3000"
         : "http://localhost:3000";
 
 const root = createRoot(document.getElementById("root")!);
@@ -143,13 +143,6 @@ const Test = (props: {name: string; test: TestCase}) => {
         <div style={{lineHeight: 1}}>
             <h3 style={{marginTop: 0, marginBottom: 0}}>
                 {props.name}{" "}
-                {props.test.issue != null && (
-                    <a
-                        href={`https://github.com/ionic-team/capacitor/issues/${props.test.issue}/`}
-                    >
-                        #{props.test.issue}
-                    </a>
-                )}
             </h3>
             {passed == true && (
                 <h5 style={{marginTop: 0, marginBottom: 0, color: "green"}}>Passed</h5>
