@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild src/server.tsx --platform=node --bundle --outfile=server.js && esbuild src/index.tsx --bundle --outfile=www/index.js && cap copy"
+    "build": "esbuild src/server.tsx --platform=node --bundle --outfile=server.js && esbuild src/index.tsx --bundle --outfile=www/index.js && cap copy && cp www/index.html myApp/www/index.html && cp www/index.js myApp/www/index.js && cd myApp && cordova prepare"
   },
   "repository": {
     "type": "git",
