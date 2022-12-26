@@ -105,8 +105,9 @@ const setThenReadCookie = async () => {
     window.cordova.plugin.http.clearCookies();
 
     const toSet = makeRandomString();
-    const response = await makeRequest(window.cordova.plugin.http, `/api/cookie/${toSet}/`)
-    await makeRequest(window.cordova.plugin.http, `/api/read-cookie/cookie/`)
+    await makeRequest(window.cordova.plugin.http, `/api/cookie/${toSet}/`)
+    const response = await makeRequest(window.cordova.plugin.http, `/api/read-cookie/`)
+    const {headerCount} = await response.json();
     /*
     return document.cookie.includes(toSet);
     const cookieName = makeRandomString();
@@ -117,7 +118,7 @@ const setThenReadCookie = async () => {
     const {value} = await response.json();
     return value == cookieValue;
     */
-    return true;
+    return headerCount == 1;
 };
 
 interface TestCase {

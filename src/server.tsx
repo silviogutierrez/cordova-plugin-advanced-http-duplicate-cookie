@@ -22,9 +22,12 @@ app.get("/api/cookie/:value/", (req, res) => {
     res.json({cookie: "was set"});
 });
 
-app.get("/api/read-cookie/:cookieName/", (req, res) => {
-    console.log(req.rawHeaders);
-    res.json({value: req.cookies[req.params.cookieName]});
+app.get("/api/read-cookie/", (req, res) => {
+    const headerCount = req.rawHeaders.filter(header => header == "Cookie").length;
+    console.log("RAW HEADERS, NOTICE DUPLICATE Cookie", req.rawHeaders);
+    console.log("COOKIES", req.cookies);
+
+    res.json({headerCount});
 });
 
 app.listen(port, () => {
