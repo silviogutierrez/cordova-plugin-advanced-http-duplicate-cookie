@@ -58,10 +58,7 @@ declare global {
     }
 }
 
-const BASE_URL =
-    Capacitor.getPlatform() == "android"
-        ? "http://10.0.2.2:3000"
-        : "http://localhost:3000";
+const BASE_URL = "http://10.0.2.2:3000";
 
 const root = createRoot(document.getElementById("root")!);
 
@@ -129,12 +126,14 @@ interface TestCase {
 const Test = (props: {name: string; test: TestCase}) => {
     const [passed, setPassed] = React.useState(false);
 
-    const runTest = () => props
+    const runTest = () => {
+        props
             .test()
             .then((passed) => {
                 setPassed(passed);
             })
             .catch(() => setPassed(false));
+    }
 
     React.useEffect(() => {
         runTest();
@@ -166,6 +165,8 @@ const Tests = (props: {tests: Record<string, TestCase>}) => {
     );
 };
 
+setTimeout(() => {
+
 root.render(
     <div>
         <Tests
@@ -175,3 +176,4 @@ root.render(
         />
     </div>,
 );
+}, 5000);
