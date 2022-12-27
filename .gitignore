@@ -1,4 +1,4 @@
 node_modules/
-www/
+www/index.js
 server.js
 android/.idea
