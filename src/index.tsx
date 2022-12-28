@@ -69,7 +69,9 @@ const makeRequest = (HTTP: NonNullable<typeof window.cordova>["plugin"]["http"],
         HTTP.sendRequest(
             `${BASE_URL}${url}`,
             {
-                method: "get",
+                method: "post",
+                data: new FormData(),
+                serializer: "multipart",
                 followRedirect: false,
                 headers: {
                 },

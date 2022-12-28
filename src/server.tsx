@@ -14,7 +14,7 @@ app.get("/index.js", (req, res) => {
     res.sendFile(path.join(__dirname, "/www/index.js"));
 });
 
-app.get("/api/set-cookie/:name/:value/", (req, res) => {
+app.post("/api/set-cookie/:name/:value/", (req, res) => {
     const name = req.params.name;
     const value = req.params.value;
     console.log(`Setting cookie "${name}" to "${value}"`);
@@ -22,7 +22,7 @@ app.get("/api/set-cookie/:name/:value/", (req, res) => {
     res.json({cookie: "was set"});
 });
 
-app.get("/api/read-cookie/:name/", (req, res) => {
+app.post("/api/read-cookie/:name/", (req, res) => {
     const name = req.params.name;
     const headerCount = req.rawHeaders.filter(header => header == "Cookie").length;
     console.log("RAW HEADERS, NOTICE DUPLICATE Cookie", req.rawHeaders);
