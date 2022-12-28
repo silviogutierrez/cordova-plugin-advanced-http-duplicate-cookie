@@ -58,25 +58,27 @@ declare global {
     }
 }
 
-const BASE_URL = "http://10.0.2.2:3000";
+const BASE_URL = "https://doesthiswork.joyhealthtracker.dev";
 
 const root = createRoot(document.getElementById("root")!);
 
 const makeRandomString = () => (Math.random() + 1).toString(36).substring(2);
 
-const makeRequest = (HTTP: NonNullable<typeof window.cordova>["plugin"]["http"], url: string) => {
+const makeRequest = (HTTP: NonNullable<typeof window.cordova>["plugin"]["http"], url: string, data: FormData | null) => {
+    console.log( `${BASE_URL}${url}`)
     return new Promise<Response>((resolve) => {
         HTTP.sendRequest(
             `${BASE_URL}${url}`,
             {
-                method: "post",
-                data: new FormData(),
+                method: data == null ? "get" : "post",
+                data: data ?? undefined,
                 serializer: "multipart",
                 followRedirect: false,
                 headers: {
                 },
             },
             (response) => {
+                console.log("[Client] Response headers", response.headers);
                 resolve(
                     new Response(response.data, {
                         status: response.status,
@@ -102,10 +104,25 @@ const setThenReadCookie = async () => {
         return false;
     }
 
+    const HTTP = window.cordova.plugin.http;
+
     const name = makeRandomString();
     const value = makeRandomString();
     console.log("SETTING", name, value);
 
+    const formData = new FormData();
+    formData.append("username", "silviogutierrez@gmail.com")
+    formData.append("password", "test")
+
+    await makeRequest(HTTP, "/api/functional-rpc/rpc_login/", formData);
+    await makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null);
+
+    setTimeout(async () => {
+        const response = await makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null);
+        console.log(await response.json());
+    }, 10000);
+    /*
+    /*
     await makeRequest(window.cordova.plugin.http, `/api/set-cookie/${name}/${value}/`)
     const response = await makeRequest(window.cordova.plugin.http, `/api/read-cookie/${value}/`)
     const {headerCount} = await response.json();
@@ -119,7 +136,8 @@ const setThenReadCookie = async () => {
     const {value} = await response.json();
     return value == cookieValue;
     */
-    return headerCount == 1;
+    return true;
+    // return headerCount == 1;
 };
 
 interface TestCase {

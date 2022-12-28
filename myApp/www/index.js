@@ -22922,21 +22922,23 @@
     "src/index.tsx"(exports) {
       var React = __toESM(require_react());
       var import_client = __toESM(require_client());
-      var BASE_URL = "http://10.0.2.2:3000";
+      var BASE_URL = "https://doesthiswork.joyhealthtracker.dev";
       var root = (0, import_client.createRoot)(document.getElementById("root"));
       var makeRandomString = () => (Math.random() + 1).toString(36).substring(2);
-      var makeRequest = (HTTP, url) => {
+      var makeRequest = (HTTP, url, data) => {
+        console.log(`${BASE_URL}${url}`);
         return new Promise((resolve) => {
           HTTP.sendRequest(
             `${BASE_URL}${url}`,
             {
-              method: "post",
-              data: new FormData(),
+              method: data == null ? "get" : "post",
+              data: data != null ? data : void 0,
               serializer: "multipart",
               followRedirect: false,
               headers: {}
             },
             (response) => {
+              console.log("[Client] Response headers", response.headers);
               resolve(
                 new Response(response.data, {
                   status: response.status,
@@ -22959,13 +22961,20 @@
         if (window.cordova == null) {
           return false;
         }
+        const HTTP = window.cordova.plugin.http;
         const name = makeRandomString();
         const value = makeRandomString();
         console.log("SETTING", name, value);
-        yield makeRequest(window.cordova.plugin.http, `/api/set-cookie/${name}/${value}/`);
-        const response = yield makeRequest(window.cordova.plugin.http, `/api/read-cookie/${value}/`);
-        const { headerCount } = yield response.json();
-        return headerCount == 1;
+        const formData = new FormData();
+        formData.append("username", "silviogutierrez@gmail.com");
+        formData.append("password", "test");
+        yield makeRequest(HTTP, "/api/functional-rpc/rpc_login/", formData);
+        yield makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null);
+        setTimeout(() => __async(exports, null, function* () {
+          const response = yield makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null);
+          console.log(yield response.json());
+        }), 1e4);
+        return true;
       });
       var Test = (props) => {
         const [passed, setPassed] = React.useState(false);
