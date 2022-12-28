@@ -99,11 +99,13 @@ const setThenReadCookie = async () => {
     if (window.cordova == null) {
         return false;
     }
-    window.cordova.plugin.http.clearCookies();
 
-    const toSet = makeRandomString();
-    await makeRequest(window.cordova.plugin.http, `/api/cookie/${toSet}/`)
-    const response = await makeRequest(window.cordova.plugin.http, `/api/read-cookie/`)
+    const name = makeRandomString();
+    const value = makeRandomString();
+    console.log("SETTING", name, value);
+
+    await makeRequest(window.cordova.plugin.http, `/api/set-cookie/${name}/${value}/`)
+    const response = await makeRequest(window.cordova.plugin.http, `/api/read-cookie/${value}/`)
     const {headerCount} = await response.json();
     /*
     return document.cookie.includes(toSet);

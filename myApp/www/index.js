@@ -22957,10 +22957,11 @@
         if (window.cordova == null) {
           return false;
         }
-        window.cordova.plugin.http.clearCookies();
-        const toSet = makeRandomString();
-        yield makeRequest(window.cordova.plugin.http, `/api/cookie/${toSet}/`);
-        const response = yield makeRequest(window.cordova.plugin.http, `/api/read-cookie/`);
+        const name = makeRandomString();
+        const value = makeRandomString();
+        console.log("SETTING", name, value);
+        yield makeRequest(window.cordova.plugin.http, `/api/set-cookie/${name}/${value}/`);
+        const response = yield makeRequest(window.cordova.plugin.http, `/api/read-cookie/${value}/`);
         const { headerCount } = yield response.json();
         return headerCount == 1;
       });

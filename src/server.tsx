@@ -14,20 +14,21 @@ app.get("/index.js", (req, res) => {
     res.sendFile(path.join(__dirname, "/www/index.js"));
 });
 
-app.get("/api/cookie/:value/", (req, res) => {
-    const name = "csrftoken";
+app.get("/api/set-cookie/:name/:value/", (req, res) => {
+    const name = req.params.name;
     const value = req.params.value;
-    console.log(`Setting cookie "${name}" to "${req.params.value}"`);
+    console.log(`Setting cookie "${name}" to "${value}"`);
     res.cookie(name, value);
     res.json({cookie: "was set"});
 });
 
-app.get("/api/read-cookie/", (req, res) => {
+app.get("/api/read-cookie/:name/", (req, res) => {
+    const name = req.params.name;
     const headerCount = req.rawHeaders.filter(header => header == "Cookie").length;
     console.log("RAW HEADERS, NOTICE DUPLICATE Cookie", req.rawHeaders);
     console.log("COOKIES", req.cookies);
 
-    res.json({headerCount});
+    res.json({headerCount, [name]: req.cookies[name]});
 });
 
 app.listen(port, () => {
