@@ -22983,14 +22983,15 @@
     const name = makeRandomString();
     const value = makeRandomString();
     console.log("SETTING", name, value);
-    yield makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null);
-    const formData = new FormData();
-    formData.append("username", "silviogutierrez@gmail.com");
-    formData.append("password", "test");
-    yield makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null);
     const data = yield (yield makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null)).json();
-    console.log(data);
-    return data.profile != null;
+    if (data.profile == null) {
+      const formData = new FormData();
+      formData.append("username", "silviogutierrez@gmail.com");
+      formData.append("password", "test");
+      yield makeRequest(HTTP, "/api/functional-rpc/rpc_login/", formData);
+    }
+    const foods = yield (yield makeRequest(HTTP, "/api/functional-rpc-foods/rpc_food_list/", null)).json();
+    return foods.length > 1;
     return true;
   });
   var Test = (props) => {
