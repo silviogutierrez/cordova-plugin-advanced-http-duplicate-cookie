@@ -2,6 +2,24 @@ import * as React from "react";
 import {createRoot} from "react-dom/client";
 import {Capacitor} from "@capacitor/core";
 
+export function getCookieFromCookieString(name: string, cookieString: string) {
+    let cookieValue = null;
+    if (cookieString && cookieString != "") {
+        const cookies = cookieString.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == name + "=") {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+
 declare global {
     interface Window {
         cordova?: {
@@ -65,7 +83,11 @@ const root = createRoot(document.getElementById("root")!);
 const makeRandomString = () => (Math.random() + 1).toString(36).substring(2);
 
 const makeRequest = (HTTP: NonNullable<typeof window.cordova>["plugin"]["http"], url: string, data: FormData | null) => {
-    console.log( `${BASE_URL}${url}`)
+    const csrfToken =getCookieFromCookieString(
+        "csrftoken",
+        HTTP.getCookieString(BASE_URL),
+    );
+
     return new Promise<Response>((resolve) => {
         HTTP.sendRequest(
             `${BASE_URL}${url}`,
@@ -75,6 +97,8 @@ const makeRequest = (HTTP: NonNullable<typeof window.cordova>["plugin"]["http"],
                 serializer: "multipart",
                 followRedirect: false,
                 headers: {
+                    Referer: BASE_URL,
+                    "X-CSRFToken": csrfToken ?? "",
                 },
             },
             (response) => {
@@ -110,10 +134,12 @@ const setThenReadCookie = async () => {
     const value = makeRandomString();
     console.log("SETTING", name, value);
 
+
+    await makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null);
+
     const formData = new FormData();
     formData.append("username", "silviogutierrez@gmail.com")
     formData.append("password", "test")
-
     await makeRequest(HTTP, "/api/functional-rpc/rpc_login/", formData);
     await makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null);
 
