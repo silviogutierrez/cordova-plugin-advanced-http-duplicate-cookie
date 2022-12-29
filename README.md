@@ -2,13 +2,11 @@ Clone the repository.
 
 # Capacitor
 
-Run npm install and npm cap sync to get both platforms working.
+Run `npm install` and `npx cap sync` to get both platforms working.
 
-Run npm run build && node server.js to start the local server.
+Run `npm run build && node server.js` to start the local server.
 
-Open http://localhost:3000 and see how everything works on the browser.
-
-Run npx cap open android and run the emulator, observe failing test and duplicate header count. Look at the output of the server as well with the duplicate headers.
+Run `npx cap open android` and run the emulator, observe failing test and duplicate header count. Look at the output of the server as well with the duplicate headers.
 
 # Cordova
 Do all the above, and have the server running!
