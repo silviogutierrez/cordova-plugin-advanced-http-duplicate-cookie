@@ -22965,6 +22965,7 @@
         yield makeRequest(window.cordova.plugin.http, `/api/set-cookie/${name}/${value}/`);
         const response = yield makeRequest(window.cordova.plugin.http, `/api/read-cookie/${value}/`);
         const { headerCount } = yield response.json();
+        alert(`Cookie header is present ${headerCount}`);
         return headerCount == 1;
       });
       var Test = (props) => {

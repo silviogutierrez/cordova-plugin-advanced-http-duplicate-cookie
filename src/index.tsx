@@ -119,6 +119,8 @@ const setThenReadCookie = async () => {
     const {value} = await response.json();
     return value == cookieValue;
     */
+
+    alert(`Cookie header is present ${headerCount} times`);
     return headerCount == 1;
 };
 
