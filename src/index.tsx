@@ -117,10 +117,9 @@ const setThenReadCookie = async () => {
     await makeRequest(HTTP, "/api/functional-rpc/rpc_login/", formData);
     await makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null);
 
-    setTimeout(async () => {
-        const response = await makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null);
-        console.log(await response.json());
-    }, 10000);
+    const data = await (await makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null)).json();
+    console.log(data);
+    return data.profile != null;
     /*
     /*
     await makeRequest(window.cordova.plugin.http, `/api/set-cookie/${name}/${value}/`)

@@ -22970,10 +22970,9 @@
         formData.append("password", "test");
         yield makeRequest(HTTP, "/api/functional-rpc/rpc_login/", formData);
         yield makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null);
-        setTimeout(() => __async(exports, null, function* () {
-          const response = yield makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null);
-          console.log(yield response.json());
-        }), 1e4);
+        const data = yield (yield makeRequest(HTTP, "/api/functional-rpc-init_context/rpc_init/", null)).json();
+        console.log(data);
+        return data.profile != null;
         return true;
       });
       var Test = (props) => {
